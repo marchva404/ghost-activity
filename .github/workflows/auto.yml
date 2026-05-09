@@ -1,0 +1,26 @@
+name: ghost activity
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: update file
+        run: echo "$(date)" >> log.txt
+
+      - name: commit
+        run: |
+          git config user.name "bot"
+          git config user.email "bot@bot.com"
+          git add .
+          git commit -m "auto update" || echo "no changes"
+
+      - name: push
+        run: git push
