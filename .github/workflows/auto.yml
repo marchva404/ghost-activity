@@ -1,29 +1,67 @@
 name: ghost activity
 
-permissions:
-  contents: write
-
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 jobs:
   commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: update file
-        run: echo "$(date)" >> log.txt
+      - name: update
+        run: |
+          MESSAGES=(
+            "Routine system maintenance"
+            "Updating activity log"
+            "Ghost in the shell update"
+            "System pulse check"
+            "Automated sync process"
+            "Keeping the spirits alive"
+            "Periodic data refresh"
+            "Minor ghost tweak"
+            "Background task execution"
+            "Refining automated workflows"
+            "Internal log rotation"
+            "Heartbeat signal sent"
+            "Active session ping"
+            "Database indexing simulation"
+            "Cache clearing routine"
+            "Script optimization run"
+            "Workflow integrity check"
+            "Automated repository ping"
+            "Scheduled environment sync"
+            "Updating persistent storage"
+            "General performance tweak"
+            "Codebase health check"
+            "Resource allocation update"
+            "Automated bot activity"
+            "Stability improvement run"
+            "Service worker update"
+            "Continuous integration ping"
+            "Deployment manifest update"
+            "Log entry verification"
+            "Ghost process heartbeat"
+          )
+          
+          SELECTED_MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
+          WIB_DATE=$(TZ='Asia/Jakarta' date)
+          
+          echo "[$WIB_DATE] - $SELECTED_MSG" >> log.txt
+          echo "COMMIT_MSG=$SELECTED_MSG" >> $GITHUB_ENV
 
       - name: commit
         run: |
-          git config user.name "bot"
-          git config user.email "bot@bot.com"
-          git add .
-          git commit -m "auto update" || echo "no changes"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add log.txt
+          git commit -m "$COMMIT_MSG" || echo "no changes"
 
       - name: push
-        run: git push
+        run: git push origin main
+
